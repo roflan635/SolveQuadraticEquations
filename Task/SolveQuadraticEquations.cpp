@@ -3,7 +3,37 @@
 
 #include "pch.h"
 #include "Task.h"
+#include <fstream>
+void findRoots(double a, double b, double c, double x1, double x2, double D)
+{
+	D = b * b - 4 * a * c;
+	if (D > 0)
+	{
+		x1 = (-b - sqrt(D)) / 2 * a;
+		x2 = (-b + sqrt(D)) / 2 * a;
+	}
+	else if (D == 0)
+	{
+		x1 = -b / 2 * a;
+	}
+	else if (a == 0 && b == 0 && c == 0)
+		x1 = "infinity_solutions";
+	else
+		x1 = "no_solutions";
+}
 
+bool Solve(std::string equations, std::string results)
+{
+	std::ifstream f(equations);
+	if (f)
+	{
+		double a, b, c, x1, x2;
+		while (f >> a >> b >> c)
+		{
+
+		}
+	}
+}
 /*
 	Реализуйте в данном файле функцию, которая позволяет решать квадратные уравнения, считывая 
 	исходные данные из одного текстового файла и записывает результат в другой текстовый файла.
