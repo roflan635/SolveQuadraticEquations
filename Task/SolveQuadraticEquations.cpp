@@ -5,59 +5,93 @@
 #include "Task.h"
 #include <fstream>
 #include <string>
-/*
-void findRoots(double a, double b, double c, double x1, double x2, double D)
-{
-	D = b * b - 4 * a * c;
-	if (D > 0)
-	{
-		x1 = (-b - sqrt(D)) / 2 * a;
-		x2 = (-b + sqrt(D)) / 2 * a;
-	}
-	else if (D == 0)
-	{
-		x1 = -b / 2 * a;
-	}
-	else if (a == 0 && b == 0 && c == 0)
-		"infinity_solutions";
-	else
-		"no_solutions";
-}
-*/
+
 bool Solve(std::string equations, std::string results)
 {
-	std::ifstream f(equations);
-	std::ofstream r(results);
-	if (f && r)
+	std::ifstream f1(equations);
+	std::ofstream f2(results);
+	if (f1 && f2)
 	{
 		double a, b, c, x1, x2, D;
-		while (f >> a >> b >> c)
+		while (f1 >> a >> b >> c)
 		{
 			D = b * b - 4 * a * c;
+			if (a == 0 && b != 0)														// проверка на линейное уравнение
+			{
+				x1 = -c / b;
+				f2 << a << ' ' << b << ' ' << c << ' ' << x1 << '\n';
+			}
 			if (D > 0)
 			{
-				x1 = (-b - sqrt(D)) / 2 * a;
-				x2 = (-b + sqrt(D)) / 2 * a;
-				r << a << ' ' << b << ' ' << c << ' ' << x1 << ' ' << x2 << '\n';
+				x1 = (-b + sqrt(D)) / (2 * a);
+				x2 = (-b - sqrt(D)) / (2 * a);
+				f2 << a << ' ' << b << ' ' << c << ' ' << x1 << ' ' << x2 << '\n';
 			}
 			else if (D == 0)
 			{
-				x1 = -b / 2 * a;
-				r << a << ' ' << b << ' ' << c << ' ' << x1 << '\n';
+				x1 = sqrt(D) / (2 * a);
+				f2 << a << ' ' << b << ' ' << c << ' ' << x1 << '\n';
 			}
 			else if (a == 0 && b == 0)
 			{
-				r << a << ' ' << b << ' ' << c << ' ' << "infinity_solutions" << '\n';
+				f2 << a << ' ' << b << ' ' << c << ' ' << "infinity_solutions" << '\n';
 			}
 			else
 			{
-				r << a << ' ' << b << ' ' << c << ' ' << "no_solutions" << '\n';
+				f2 << a << ' ' << b << ' ' << c << ' ' << "no_solutions" << '\n';
 			}
 		}
 		return true;
 	}
-	else
-		return false;
+	else return false;
+}
+
+
+bool Solve(std::string equations, std::string results)
+{
+	std::ifstream f1(equations);
+	std::ofstream f2(results);
+	if (f1 && f2)
+	{
+		int roots;		// добавление переменной для кол-ва корней, чтобы потом использовать её в switch
+		double a, b, c, x1, x2, D;
+		while (f1 >> a >> b >> c)
+		{
+			D = b * b - 4 * a * c;
+			if (a == 0 && b != 0)	//проверка на линейное уравнение
+			{
+				x1 = -c / b;
+				f2 << a << ' ' << b << ' ' << c << ' ' << x1 << '\n';
+			}
+			else if (a == 0 && b == 0)		//проверка на бесконечное множество решений
+			{
+				f2 << a << ' ' << b << ' ' << c << ' ' << "infinity_solutions" << '\n';
+			}
+			else if (a != 0)	//для квадратного уравнения
+			{
+				if (D > 0) roots = 2;
+				else if (D == 0) roots = 1;
+				else if (D < 0) roots = 0;
+				switch (roots)
+				{
+				case 2:
+					x1 = (-b + sqrt(D)) / (2 * a);
+					x2 = (-b - sqrt(D)) / (2 * a);
+					f2 << a << ' ' << b << ' ' << c << ' ' << x1 << ' ' << x2 << '\n';
+					break;
+				case 1:
+					x1 = sqrt(D) / (2 * a);
+					f2 << a << ' ' << b << ' ' << c << ' ' << x1 << '\n';
+					break;
+				case 0:
+					f2 << a << ' ' << b << ' ' << c << ' ' << "no_solutions" << '\n';
+					break;
+				}
+			}
+		}
+		return true;
+	}
+	else return false;
 }
 /*
 	Реализуйте в данном файле функцию, которая позволяет решать квадратные уравнения, считывая 
