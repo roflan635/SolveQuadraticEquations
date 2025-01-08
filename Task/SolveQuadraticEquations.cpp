@@ -4,6 +4,8 @@
 #include "pch.h"
 #include "Task.h"
 #include <fstream>
+#include <string>
+/*
 void findRoots(double a, double b, double c, double x1, double x2, double D)
 {
 	D = b * b - 4 * a * c;
@@ -17,22 +19,45 @@ void findRoots(double a, double b, double c, double x1, double x2, double D)
 		x1 = -b / 2 * a;
 	}
 	else if (a == 0 && b == 0 && c == 0)
-		x1 = "infinity_solutions";
+		"infinity_solutions";
 	else
-		x1 = "no_solutions";
+		"no_solutions";
 }
-
+*/
 bool Solve(std::string equations, std::string results)
 {
 	std::ifstream f(equations);
-	if (f)
+	std::ofstream r(results);
+	if (f && r)
 	{
-		double a, b, c, x1, x2;
+		double a, b, c, x1, x2, D;
 		while (f >> a >> b >> c)
 		{
-
+			D = b * b - 4 * a * c;
+			if (D > 0)
+			{
+				x1 = (-b - sqrt(D)) / 2 * a;
+				x2 = (-b + sqrt(D)) / 2 * a;
+				r << a << ' ' << b << ' ' << c << ' ' << x1 << ' ' << x2 << '\n';
+			}
+			else if (D == 0)
+			{
+				x1 = -b / 2 * a;
+				r << a << ' ' << b << ' ' << c << ' ' << x1 << '\n';
+			}
+			else if (a == 0 && b == 0)
+			{
+				r << a << ' ' << b << ' ' << c << ' ' << "infinity_solutions" << '\n';
+			}
+			else
+			{
+				r << a << ' ' << b << ' ' << c << ' ' << "no_solutions" << '\n';
+			}
 		}
+		return true;
 	}
+	else
+		return false;
 }
 /*
 	Реализуйте в данном файле функцию, которая позволяет решать квадратные уравнения, считывая 
